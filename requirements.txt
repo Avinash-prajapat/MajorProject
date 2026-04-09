@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+langchain
+sentence-transformers
+faiss-cpu
+pymupdf
+transformers
+accelerate
+python-multipart

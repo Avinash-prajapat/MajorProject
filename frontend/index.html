@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF Research Assistant | Chandigarh University</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="icon" href="s7vi7.jpg" type="image/jpg">
+  
+  <style>
+    :root {
+      /* Chandigarh University Brand Colors */
+      --cu-red: #DC3545;
+      --cu-red-dark: #bd2130;
+      --cu-gold: #FCB134;
+      --cu-gold-light: #ffd76a;
+      --cu-navy: #1a1a2e;
+      
+      /* Light Theme (Default - White Background) */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-tertiary: #eef1ff;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #495057;
+      --text-muted: #6c757d;
+      --border-color: #e9ecef;
+      --shadow-color: rgba(0,0,0,0.08);
+      
+      /* Accent Colors */
+      --primary: #4361ee;
+      --primary-hover: #3a56d4;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      
+      /* UI Properties */
+      --shadow-sm: 0 2px 8px var(--shadow-color);
+      --shadow-md: 0 4px 16px var(--shadow-color);
+      --shadow-lg: 0 8px 32px var(--shadow-color);
+      --shadow-hover: 0 12px 48px rgba(0,0,0,0.15);
+      --glow: 0 0 20px rgba(67, 97, 238, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #0f0f1a;
+      --bg-secondary: #1a1a2e;
+      --bg-tertiary: #232340;
+      --bg-card: #1e1e32;
+      --text-primary: #f8f9fa;
+      --text-secondary: #dee2e6;
+      --text-muted: #adb5bd;
+      --border-color: #2a2a4a;
+      --shadow-color: rgba(0,0,0,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background var(--transition-normal), color var(--transition-normal);
+    }
+
+    /* ================= ANIMATIONS ================= */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes typewriter { from { width: 0; } to { width: 100%; } }
+    @keyframes confetti { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+    /* ================= CONFETTI ================= */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      animation: confetti 3s ease-out forwards;
+      z-index: 9999;
+    }
+
+    /* ================= HEADER ================= */
+    header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.8rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: slideDown 0.6s ease;
+      box-shadow: var(--shadow-sm);
+      transition: background var(--transition-normal), border-color var(--transition-normal);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .university-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: fadeInLeft 0.8s ease;
+    }
+
+    .cu-logo {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--cu-red), var(--cu-navy));
+      border-radius: var(--radius-sm);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .cu-logo:hover {
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: var(--shadow-lg), var(--glow);
+    }
+
+    .cu-logo svg { width: 40px; height: 40px; fill: white; }
+
+    .cu-logo::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+      background-size: 200% 200%;
+    }
+
+    .university-info { animation: fadeIn 1s ease 0.2s both; }
+    .university-info h1 { font-size: 1.3rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+    .university-info p { font-size: 0.85rem; color: var(--text-muted); }
+
+    .project-badge {
+      background: linear-gradient(135deg, var(--cu-red), var(--cu-red-dark));
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: var(--shadow-sm);
+      animation: pulse 2s infinite;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: fadeInRight 0.8s ease;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      color: var(--text-primary);
+      font-size: 1.1rem;
+    }
+
+    .theme-toggle:hover {
+      background: var(--primary);
+      color: white;
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .team-info { text-align: right; font-size: 0.85rem; }
+    .team-info strong { display: block; color: var(--cu-red); font-weight: 600; }
+    .team-members { color: var(--text-muted); margin-top: 3px; font-size: 0.8rem; }
+
+    @media (max-width: 1024px) {
+      .header-container { flex-direction: column; text-align: center; }
+      .team-info { text-align: center; }
+      .header-actions { justify-content: center; }
+    }
+
+    /* ================= MAIN CONTAINER ================= */
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; animation: fadeIn 0.8s ease 0.3s both; }
+
+    .dashboard { display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-top: 0.5rem; }
+    @media (max-width: 1024px) { .dashboard { grid-template-columns: 1fr; } }
+
+    /* ================= CARDS ================= */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-normal), background var(--transition-normal), border-color var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cu-red), var(--cu-gold), var(--primary));
+      background-size: 300% 100%;
+      animation: gradientShift 4s ease infinite;
+    }
+
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+
+    .upload-section { animation: fadeInUp 0.6s ease 0.4s both; }
+    .chat-section { animation: fadeInUp 0.6s ease 0.5s both; }
+    .results-section { animation: fadeInUp 0.6s ease 0.6s both; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      margin-bottom: 1.3rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.15rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 2px solid var(--border-color);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 60px; height: 2px;
+      background: var(--cu-red);
+      border-radius: 2px;
+    }
+
+    .section-title i { color: var(--cu-red); font-size: 1.3rem; animation: float 3s ease-in-out infinite; }
+
+    .section-actions { display: flex; gap: 0.5rem; }
+    .section-actions button {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      transition: var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .section-actions button:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* ================= UPLOAD SECTION ================= */
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2.2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: var(--bg-secondary);
+      transition: var(--transition-normal);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--primary);
+      background: var(--bg-tertiary);
+      transform: scale(1.01);
+    }
+
+    .upload-area i { font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; display: block; animation: float 2.5s ease-in-out infinite; }
+    .upload-area:hover i { color: var(--primary); transform: scale(1.1); }
+    .upload-area p { color: var(--text-secondary); margin-bottom: 0.8rem; font-size: 1rem; }
+
+    /* Progress Bar */
+    .progress-container {
+      margin-top: 1rem;
+      display: none;
+    }
+    .progress-container.active { display: block; animation: fadeIn 0.3s ease; }
+    .progress-bar {
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+      animation: shimmer 2s infinite;
+      background-size: 200% 100%;
+    }
+    .progress-text { font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.75rem 1.6rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-bounce);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: var(--transition-normal);
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg), var(--glow); }
+    .btn:hover::before { left: 100%; }
+
+    .file-list { margin-top: 1rem; max-height: 220px; overflow-y: auto; }
+
+    .file-item {
+      background: var(--bg-secondary);
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.92rem;
+      border-left: 4px solid var(--cu-red);
+      animation: fadeInLeft 0.4s ease both;
+      transition: var(--transition-normal);
+      border: 1px solid var(--border-color);
+    }
+
+    .file-item:hover { transform: translateX(4px); box-shadow: var(--shadow-sm); border-left-color: var(--primary); }
+    .file-item i { color: var(--danger); font-size: 1.1rem; }
+    
+    .file-preview {
+      width: 40px;
+      height: 50px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--cu-red);
+      margin-right: 0.5rem;
+    }
+
+    /* ================= CHAT SECTION ================= */
+    .mode-selector {
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      padding: 0.8rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    .mode-selector label { font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; }
+    .mode-selector select {
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      font-size: 0.9rem;
+      min-width: 200px;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      color: var(--text-primary);
+    }
+    .mode-selector select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12); }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
+    
+    .stat-card {
+      background: var(--bg-secondary);
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      border: 1px solid var(--border-color);
+      transition: var(--transition-normal);
+    }
+    .stat-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .stat-value { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    .chat-messages {
+      height: 380px;
+      overflow-y: auto;
+      background: var(--bg-secondary);
+      padding: 1.3rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    .message { margin-bottom: 1.1rem; animation: messageSlide 0.35s ease; max-width: 85%; position: relative; }
+    @keyframes messageSlide { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .message.user { margin-left: auto; text-align: right; }
+    .message.assistant { margin-right: auto; text-align: left; }
+
+    .message-bubble {
+      display: inline-block;
+      padding: 0.95rem 1.3rem;
+      border-radius: var(--radius-md);
+      font-size: 0.96rem;
+      line-height: 1.55;
+      position: relative;
+      transition: var(--transition-normal);
+    }
+    .user .message-bubble {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border-bottom-right-radius: 4px;
+      box-shadow: var(--shadow-md);
+    }
+    .assistant .message-bubble {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .message-actions {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      justify-content: flex-end;
+    }
+    .message-actions button {
+      background: transparent;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      transition: var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .message-actions button:hover { background: var(--bg-tertiary); color: var(--primary); }
+
+    .citation-box {
+      background: linear-gradient(135deg, rgba(252,177,52,0.15), rgba(255,243,205,0.1));
+      border-left: 4px solid var(--cu-gold);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-top: 0.9rem;
+      font-size: 0.87rem;
+      color: var(--text-primary);
+      border: 1px solid rgba(252, 177, 52, 0.3);
+    }
+    .citation-box b { color: var(--cu-red); font-weight: 600; }
+
+    /* Question Suggestions */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    .suggestion-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .suggestion-chip:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .chat-input-area { display: flex; gap: 0.9rem; align-items: center; }
+    
+    .chat-input {
+      flex: 1;
+      padding: 1rem 1.3rem;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border-color);
+      font-size: 0.96rem;
+      transition: var(--transition-normal);
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .chat-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.12); }
+    .chat-input::placeholder { color: var(--text-muted); }
+
+    .input-actions { display: flex; gap: 0.5rem; }
+    .input-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-normal);
+      font-size: 1rem;
+    }
+    .input-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); }
+    .input-btn.recording { background: var(--danger); color: white; animation: pulse 1s infinite; }
+
+    .send-btn {
+      background: linear-gradient(135deg, var(--cu-red), var(--cu-red-dark));
+      color: white;
+      border: none;
+      padding: 1rem 1.6rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: var(--transition-bounce);
+      box-shadow: var(--shadow-md);
+      min-width: 52px;
+    }
+    .send-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: var(--shadow-lg), 0 0 25px rgba(220, 53, 69, 0.3); }
+    .send-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* Typing Indicator */
+    .typing-indicator { display: inline-flex; align-items: center; gap: 5px; padding: 0.5rem 0; }
+    .typing-indicator span {
+      width: 9px; height: 9px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; background: var(--cu-red); }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; background: var(--cu-gold); }
+    .typing-indicator span:nth-child(3) { animation-delay: 0s; background: var(--secondary); }
+
+    /* ================= RESULTS SECTION ================= */
+    .results-section { margin-top: 1.8rem; }
+    .results-header {
+      text-align: center;
+      margin-bottom: 1.6rem;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, rgba(220,53,69,0.06), rgba(252,177,52,0.06));
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+    .results-header h3 { color: var(--text-primary); margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .results-header p { color: var(--text-muted); font-size: 0.92rem; }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+    .results-table thead { background: linear-gradient(135deg, var(--cu-red), var(--secondary)); }
+    .results-table th { color: white; padding: 1.1rem 1rem; text-align: center; font-weight: 600; font-size: 0.98rem; }
+    .results-table td { padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.98rem; transition: var(--transition-normal); }
+    .results-table tbody tr:hover { background: var(--bg-secondary); }
+    .results-table tbody tr:last-child { background: linear-gradient(135deg, rgba(220,53,69,0.08), rgba(252,177,52,0.08)); border-top: 2px solid var(--cu-gold); }
+
+    .accuracy-high { color: var(--success); font-weight: 700; }
+    .accuracy-med { color: var(--warning); font-weight: 600; }
+    .accuracy-low { color: var(--danger); font-weight: 600; }
+
+    .formula-box {
+      background: var(--bg-secondary);
+      padding: 1.2rem;
+      border-radius: var(--radius-sm);
+      margin-top: 1.2rem;
+      font-size: 0.88rem;
+      border-left: 4px solid var(--primary);
+      border: 1px solid var(--border-color);
+    }
+    .formula-box code {
+      background: var(--bg-tertiary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.82rem;
+      color: var(--primary);
+    }
+
+    /* ================= FOOTER ================= */
+    footer {
+      background: var(--cu-navy);
+      color: white;
+      padding: 1.8rem 2rem;
+      margin-top: 2.5rem;
+      position: relative;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cu-red), var(--cu-gold), var(--primary));
+    }
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 1rem; }
+    .footer-brand .cu-logo { width: 48px; height: 48px; }
+    .footer-info { font-size: 0.92rem; opacity: 0.95; }
+    .footer-info strong { color: var(--cu-gold); }
+    .project-meta { text-align: right; font-size: 0.87rem; opacity: 0.9; }
+    .project-meta span { display: block; margin: 3px 0; }
+    .project-meta strong { color: var(--cu-gold); }
+
+    @media (max-width: 768px) {
+      .footer-content { flex-direction: column; text-align: center; }
+      .project-meta { text-align: center; }
+      .chat-messages { height: 340px; }
+      .message { max-width: 95%; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ================= UTILITIES ================= */
+    .text-center { text-align: center; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .text-sm { font-size: 0.85rem; }
+    .text-muted { color: var(--text-muted); }
+    
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .badge-success { background: rgba(6, 214, 160, 0.15); color: var(--success); }
+    .badge-warning { background: rgba(255, 209, 102, 0.2); color: #856404; }
+    .badge-primary { background: rgba(67, 97, 238, 0.15); color: var(--primary); }
+
+    /* ================= SCROLLBAR ================= */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+      border-radius: 10px;
+      border: 2px solid var(--bg-secondary);
+    }
+
+    /* ================= TOAST ================= */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: var(--shadow-lg);
+      animation: fadeInUp 0.3s ease, fadeOut 0.3s ease 2.7s both;
+      max-width: 350px;
+      border-left: 4px solid var(--success);
+    }
+    .toast.error { border-left-color: var(--danger); background: linear-gradient(135deg, #ef476f, #c73e54); }
+    .toast.success { border-left-color: var(--success); background: linear-gradient(135deg, #06d6a0, #05ac80); }
+    .toast.info { border-left-color: var(--primary); background: linear-gradient(135deg, #4361ee, #3a56d4); }
+    
+    @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
+
+    /* ================= MODAL ================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-normal);
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    
+    .modal {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--shadow-hover);
+      transform: scale(0.9);
+      transition: var(--transition-normal);
+      border: 1px solid var(--border-color);
+    }
+    .modal-overlay.active .modal { transform: scale(1); }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .modal-title { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: var(--transition-normal);
+    }
+    .modal-close:hover { color: var(--danger); transform: rotate(90deg); }
+    
+    .modal-body { color: var(--text-secondary); line-height: 1.7; }
+    .modal-body ul { margin-left: 1.5rem; margin-top: 0.8rem; }
+    .modal-body li { margin-bottom: 0.4rem; }
+    
+    .modal-footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.8rem;
+    }
+
+    /* ================= REDUCED MOTION ================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="header-container">
+      <div class="university-brand">
+        <div class="cu-logo" title="Chandigarh University" onclick="showProjectInfo()">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="3"/>
+            <path d="M50 20 L65 45 L50 70 L35 45 Z" fill="none" stroke="white" stroke-width="2.5"/>
+            <circle cx="50" cy="35" r="8" fill="white"/>
+            <path d="M30 60 Q50 75 70 60" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <text x="50" y="53" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">CU</text>
+          </svg>
+        </div>
+        <div class="university-info">
+          <h1>Chandigarh University</h1>
+          <p>Department of Computer Science & Engineering</p>
+        </div>
+        <span class="project-badge"><i class="fas fa-graduation-cap"></i> Major Project 2026</span>
+      </div>
+      
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="team-info">
+          <strong><i class="fas fa-chalkboard-teacher"></i> Ms. Kamna Priya</strong>
+          <div class="team-members">
+            <span>👤 Anish Kumar</span> • <span>👤 Avinash Kumar</span> • <span>👤 Vipul Thakur</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="container">
+    <div class="dashboard">
+      
+      <!-- ================= UPLOAD CARD ================= -->
+      <div class="card upload-section">
+        <h3 class="section-title">
+          <span><i class="fas fa-cloud-upload-alt"></i> Upload Research Papers</span>
+          <div class="section-actions">
+            <button onclick="exportChat()" title="Export Chat"><i class="fas fa-download"></i> Export</button>
+          </div>
+        </h3>
+        
+        <div class="upload-area" id="dropZone">
+          <i class="fas fa-file-pdf"></i>
+          <p><strong>Drag & drop</strong> PDF files here</p>
+          <p class="text-muted text-sm">or</p>
+          <button class="btn" id="uploadBtn"><i class="fas fa-folder-open"></i> Browse Files</button>
+          <p class="text-muted text-sm mt-1"><i class="fas fa-info-circle"></i> Supports: .pdf files only</p>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText">Uploading...</div>
+        </div>
+        
+        <div class="file-list" id="fileList"></div>
+        
+        <div class="mt-2">
+          <span class="badge badge-success"><i class="fas fa-check-circle"></i> RAG Enabled</span>
+          <span class="badge badge-warning"><i class="fas fa-shield-alt"></i> Citation Support</span>
+          <span class="badge badge-primary"><i class="fas fa-bolt"></i> Real-time</span>
+        </div>
+      </div>
+
+      <!-- ================= CHAT CARD ================= -->
+      <div class="card chat-section">
+        <h3 class="section-title">
+          <span><i class="fas fa-robot"></i> AI Research Assistant</span>
+          <div class="section-actions">
+            <button onclick="clearChat()" title="Clear Chat"><i class="fas fa-trash"></i> Clear</button>
+          </div>
+        </h3>
+        
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="msgCount">0</div>
+            <div class="stat-label">Messages</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="fileCount">0</div>
+            <div class="stat-label">Files</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:var(--success)">92%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+        </div>
+        
+        <div class="mode-selector">
+          <label for="modeSelect"><i class="fas fa-cog"></i> Response Mode:</label>
+          <select id="modeSelect">
+            <option value="normal_llm">⚡ Normal LLM (Fast)</option>
+            <option value="basic_rag">📚 Basic RAG</option>
+            <option value="rag_chunking">🧩 RAG + Smart Chunking</option>
+            <option value="hybrid" selected>🚀 Hybrid RAG (Recommended)</option>
+          </select>
+        </div>
+
+        <!-- Smart Suggestions -->
+        <div class="suggestions">
+          <span class="suggestion-chip" onclick="useSuggestion('What is RAG architecture?')">
+            <i class="fas fa-lightbulb"></i> What is RAG?
+          </span>
+          <span class="suggestion-chip" onclick="useSuggestion('Explain the methodology used')">
+            <i class="fas fa-flask"></i> Methodology
+          </span>
+          <span class="suggestion-chip" onclick="useSuggestion('What are the key findings?')">
+            <i class="fas fa-chart-line"></i> Key Findings
+          </span>
+          <span class="suggestion-chip" onclick="useSuggestion('List the citations')">
+            <i class="fas fa-book"></i> Citations
+          </span>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="assistant message">
+            <div class="message-bubble">
+              👋 Welcome to <strong>PDF Research Assistant</strong>!<br><br>
+              <strong>✨ Features:</strong><br>
+              ✓ Retrieval-Augmented Generation (RAG)<br>
+              ✓ Strict Document Grounding<br>
+              ✓ Auto Citation Support<br>
+              ✓ Hybrid Offline Backup<br><br>
+              <em style="color:var(--primary);font-weight:500">📁 Upload a PDF and ask your research questions!</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question..." autocomplete="off">
+          <div class="input-actions">
+            <button class="input-btn" id="voiceBtn" title="Voice Input"><i class="fas fa-microphone"></i></button>
+          </div>
+          <button class="send-btn" id="sendBtn" title="Send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= RESULTS SECTION ================= -->
+    <div class="card results-section">
+      <div class="results-header">
+        <h3><i class="fas fa-chart-line"></i> Experimental Results</h3>
+        <p>Evaluation based on 50 factual queries across multiple research papers</p>
+      </div>
+
+      <table class="results-table">
+        <thead>
+          <tr><th>Method</th><th>Accuracy</th><th>Hallucination Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>LLM Only (No RAG)</td><td class="accuracy-low">62%</td><td class="accuracy-low">40%</td></tr>
+          <tr><td>Basic RAG</td><td class="accuracy-med">80%</td><td class="accuracy-med">22%</td></tr>
+          <tr><td>RAG + Chunking</td><td class="accuracy-high">88%</td><td class="accuracy-high">13%</td></tr>
+          <tr><td><strong>🏆 Hybrid RAG</strong></td><td class="accuracy-high"><strong>92%</strong></td><td class="accuracy-high"><strong>10%</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="formula-box">
+        <strong>📊 Metrics Definition:</strong><br><br>
+        • <strong>Accuracy</strong> = <code>Correct Answers / Total Questions × 100</code><br>
+        • <strong>Hallucination Rate</strong> = <code>Fabricated Claims / Total Answers × 100</code><br><br>
+        <strong>Sample Calculation:</strong><br>
+        Hybrid RAG: Accuracy = <code>46/50 × 100 = 92%</code> | Hallucination = <code>5/50 × 100 = 10%</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="cu-logo">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="3"/>
+            <path d="M50 20 L65 45 L50 70 L35 45 Z" fill="none" stroke="white" stroke-width="2.5"/>
+            <circle cx="50" cy="35" r="8" fill="white"/>
+            <path d="M30 60 Q50 75 70 60" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <text x="50" y="53" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">CU</text>
+          </svg>
+        </div>
+        <div class="footer-info">
+          <strong>Chandigarh University</strong><br>
+          NH-5, Chandigarh-Ludhiana Highway, Gharuan, Mohali, Punjab 140413
+        </div>
+      </div>
+      <div class="project-meta">
+        <span><strong>📄 Project:</strong> PDF Research Assistant (RAG-Based)</span>
+        <span><strong>👩‍🏫 Guide:</strong> Ms. Kamna Priya</span>
+        <span><strong>👥 Team:</strong> Anish • Avinash • Vipul</span>
+        <span><strong>🎓 Year:</strong> 2025-2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= PROJECT INFO MODAL ================= -->
+  <div class="modal-overlay" id="infoModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🎓 Project Information</div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>PDF Research Assistant</strong> is a Retrieval-Augmented Generation (RAG) based system developed as a Major Project at Chandigarh University.</p>
+        <ul>
+          <li><strong>Technology:</strong> HTML5, CSS3, JavaScript, Python FastAPI</li>
+          <li><strong>Features:</strong> RAG, Citation Support, Hybrid Mode, Voice Input</li>
+          <li><strong>Accuracy:</strong> 92% with Hybrid RAG approach</li>
+          <li><strong>Use Case:</strong> Academic research, document Q&A, literature review</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal()">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // ================= THEME TOGGLE =================
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+    
+    themeToggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+      showToast(`Switched to ${next} mode`, 'info');
+    });
+    
+    function updateThemeIcon(theme) {
+      themeToggle.innerHTML = theme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    }
+
+    // ================= CONFETTI EFFECT =================
+    function createConfetti() {
+      const colors = ['#DC3545', '#FCB134', '#4361ee', '#06d6a0', '#7209b7'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }
+    }
+
+    // ================= TOAST NOTIFICATIONS =================
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+      toast.innerHTML = `<i class="fas ${icons[type]}"></i> ${message}`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ================= MODAL =================
+    function showProjectInfo() {
+      document.getElementById('infoModal').classList.add('active');
+      createConfetti();
+    }
+    function closeModal() {
+      document.getElementById('infoModal').classList.remove('active');
+    }
+    document.getElementById('infoModal').addEventListener('click', (e) => {
+      if (e.target.id === 'infoModal') closeModal();
+    });
+
+    // ================= UPLOAD FUNCTIONALITY =================
+    const uploadBtn = document.getElementById("uploadBtn");
+    const dropZone = document.getElementById("dropZone");
+    const fileList = document.getElementById("fileList");
+    const progressContainer = document.getElementById("progressContainer");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    let uploadedFiles = 0;
+
+    uploadBtn.addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".pdf";
+      input.onchange = handleFileSelect;
+      input.click();
+    });
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+    });
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+    });
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files[0]) handleFileSelect({ target: { files } });
+    });
+
+    async function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file || file.type !== 'application/pdf') {
+        showToast('Please select a valid PDF file', 'error');
+        return;
+      }
+
+      // Show progress
+      progressContainer.classList.add('active');
+      progressFill.style.width = '0%';
+      
+      // Animate progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 90) progress = 90;
+        progressFill.style.width = progress + '%';
+        progressText.textContent = `Uploading: ${Math.round(progress)}%`;
+      }, 200);
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/upload_pdf", {
+          method: "POST", body: formData
+        });
+        const data = await response.json();
+        
+        clearInterval(interval);
+        progressFill.style.width = '100%';
+        progressText.textContent = 'Complete!';
+        
+        setTimeout(() => {
+          progressContainer.classList.remove('active');
+          progressFill.style.width = '0%';
+        }, 500);
+        
+        // Add file to list with preview
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <div class="file-preview"><i class="fas fa-file-pdf"></i></div>
+          <div style="flex:1">
+            <div style="font-weight:500">${file.name}</div>
+            <div class="text-sm text-muted">${(file.size/1024/1024).toFixed(2)} MB</div>
+          </div>
+          <span class="badge badge-success"><i class="fas fa-check"></i></span>
+        `;
+        fileList.appendChild(fileItem);
+        
+        uploadedFiles++;
+        document.getElementById('fileCount').textContent = uploadedFiles;
+        
+        showToast('✓ File uploaded successfully!', 'success');
+        createConfetti();
+        
+      } catch (err) {
+        clearInterval(interval);
+        progressContainer.classList.remove('active');
+        showToast('✗ Upload failed. Check backend.', 'error');
+        console.error("Upload error:", err);
+      }
+    }
+
+    // ================= CHAT FUNCTIONALITY =================
+    const sendBtn = document.getElementById("sendBtn");
+    const chatInput = document.getElementById("chatInput");
+    const chatMessages = document.getElementById("chatMessages");
+    const modeSelect = document.getElementById("modeSelect");
+    let messageCount = 0;
+
+    sendBtn.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+
+    // Voice Input
+    const voiceBtn = document.getElementById('voiceBtn');
+    let recognition;
+    
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+      
+      recognition.onstart = () => {
+        voiceBtn.classList.add('recording');
+        voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+        showToast('🎤 Listening...', 'info');
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        chatInput.value = transcript;
+        sendMessage();
+      };
+      
+      recognition.onend = () => {
+        voiceBtn.classList.remove('recording');
+        voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+      };
+      
+      recognition.onerror = () => {
+        voiceBtn.classList.remove('recording');
+        voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        showToast('Voice input error', 'error');
+      };
+      
+      voiceBtn.addEventListener('click', () => {
+        if (voiceBtn.classList.contains('recording')) {
+          recognition.stop();
+        } else {
+          recognition.start();
+        }
+      });
+    } else {
+      voiceBtn.style.display = 'none';
+    }
+
+    function useSuggestion(text) {
+      chatInput.value = text;
+      chatInput.focus();
+    }
+
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message === "") return;
+
+      const mode = modeSelect.value;
+      
+      addMessage(message, 'user');
+      chatInput.value = "";
+      messageCount++;
+      document.getElementById('msgCount').textContent = messageCount;
+      
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      
+      const loadingId = 'loading-' + Date.now();
+      chatMessages.innerHTML += `
+        <div class="assistant message" id="${loadingId}">
+          <div class="message-bubble">
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+            <em style="margin-left:10px;color:var(--text-muted)">Thinking...</em>
+          </div>
+        </div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: message, mode: mode })
+        });
+
+        const data = await response.json();
+        document.getElementById(loadingId)?.remove();
+
+        let citationHTML = "";
+        if (data.citations && data.citations.length > 0) {
+          citationHTML = `<div class='citation-box'><b><i class="fas fa-bookmark"></i> Sources:</b><br>
+            ${data.citations.map((c, i) => `${i+1}. <strong>${c.source}</strong> (Page ${c.page})`).join('<br>')}</div>`;
+        }
+
+        // Typewriter effect for response
+        await typeWriterResponse(`${data.answer}${citationHTML}`, 'assistant');
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+
+      } catch (error) {
+        console.error("API Error:", error);
+        document.getElementById(loadingId)?.remove();
+        addMessage("⚠️ <strong>Connection Error:</strong> Ensure backend is running at <code>http://127.0.0.1:8000</code>", 'assistant');
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+        showToast('Backend connection error', 'error');
+      }
+    }
+
+    // Typewriter effect
+    async function typeWriterResponse(content, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.innerHTML = `<div class="message-bubble"></div>`;
+      
+      const bubble = msgDiv.querySelector('.message-bubble');
+      chatMessages.appendChild(msgDiv);
+      
+      // Type character by character for effect
+      let i = 0;
+      const speed = 15; // ms per character
+      
+      return new Promise(resolve => {
+        function type() {
+          if (i < content.length) {
+            bubble.innerHTML += content.charAt(i);
+            i++;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            setTimeout(type, speed);
+          } else {
+            // Add copy button after typing completes
+            bubble.innerHTML += `
+              <div class="message-actions">
+                <button onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> Copy</button>
+              </div>`;
+            resolve();
+          }
+        }
+        type();
+      });
+    }
+
+    function addMessage(content, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.innerHTML = `<div class="message-bubble">${content}</div>`;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Copy to Clipboard
+    function copyToClipboard(btn) {
+      const bubble = btn.closest('.message-bubble');
+      const text = bubble.cloneNode(true);
+      text.querySelector('.message-actions')?.remove();
+      text.querySelector('.citation-box')?.querySelectorAll('br').forEach(br => br.replaceWith(' | '));
+      
+      navigator.clipboard.writeText(text.textContent.trim()).then(() => {
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        showToast('Answer copied to clipboard!', 'success');
+        setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy', 2000);
+      });
+    }
+
+    // Clear Chat
+    function clearChat() {
+      if (confirm('Clear all messages?')) {
+        chatMessages.innerHTML = `
+          <div class="assistant message">
+            <div class="message-bubble">
+              🗑️ Chat cleared! Ask a new question to continue.<br><br>
+              <em>Tip: Try one of the suggestions above 👆</em>
+            </div>
+          </div>`;
+        messageCount = 0;
+        document.getElementById('msgCount').textContent = 0;
+        showToast('Chat cleared', 'info');
+      }
+    }
+
+    // Export Chat
+    function exportChat() {
+      const messages = chatMessages.querySelectorAll('.message');
+      let exportText = "PDF Research Assistant - Chat Export\n";
+      exportText += "================================\n\n";
+      
+      messages.forEach(msg => {
+        const sender = msg.classList.contains('user') ? 'You' : 'Assistant';
+        const text = msg.querySelector('.message-bubble').textContent.trim();
+        exportText += `[${sender}] ${text}\n\n`;
+      });
+      
+      const blob = new Blob([exportText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `chat-export-${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('Chat exported successfully!', 'success');
+    }
+
+    // ================= INITIALIZATION =================
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("🎓 PDF Research Assistant Loaded - Chandigarh University");
+      
+      // Add welcome animation delay
+      setTimeout(() => {
+        document.querySelector('.chat-section .message-bubble').style.animation = 'fadeInUp 0.5s ease';
+      }, 800);
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && document.activeElement === chatInput) {
+        e.preventDefault();
+        sendMessage();
+      }
+      if (e.key === 'Escape' && document.activeElement === chatInput) {
+        chatInput.value = '';
+      }
+      if (e.key === 'Escape' && document.getElementById('infoModal').classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
